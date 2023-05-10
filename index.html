@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hover to show fadein image</title>
+  <style>
+    :root {
+      --index: calc(1vh + 1vw);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      outline: none;
+      cursor: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    li {
+      list-style-type: none;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .hero {
+      width: 100%;
+      height: 100vh;
+      background-color: #000;
+      overflow: hidden;
+    }
+
+    .hero__nav {
+      position: absolute;
+      top: 100px;
+      left: 100px;
+      z-index: 2;
+    }
+
+    .hero__link {
+      font-weight: 600;
+      font-size: calc(var(--index) * 2.5);
+      line-height: 180%;
+      letter-spacing: calc(var(--index) * 0.5);
+      color: #fff;
+      opacity: 0.7;
+      transition: opacity 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+
+    .hero__link:hover {
+      opacity: 1;
+    }
+
+    .hero__link--active {
+      opacity: 1;
+    }
+
+    .hero__img {
+      display: none;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .hero__img img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero__img-text {
+      position: absolute;
+      bottom: 200px;
+      right: 100px;
+      font-size: 36px;
+      color: #fff;
+      text-align: right;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .hero__img--display {
+      display: block;
+    }
+
+    .hero__img--active img {
+      animation: imgActive 2s ease 0s;
+    }
+
+    .hero__img--active .hero__img-text {
+      animation: titleActive 2s ease 0s;
+    }
+
+    @keyframes imgActive {
+      from {
+        opacity: 0;
+        transform: translateY(-100%);
+      }
+    }
+
+    @keyframes titleActive {
+      from {
+        opacity: 0;
+        transform: translateY(100%);
+      }
+    }
+
+    /* CURSOR */
+    #cursor,
+    #aura {
+      position: absolute;
+      border-radius: 100%;
+      transition: 0.5s cubic-bezier(.75, -1.75, .3, 2.33) transform, 0.2s cubic-bezier(.75, -1.25, .3, 2.33) opacity;
+      user-select: none;
+      pointer-events: none;
+      z-index: 10000;
+    }
+
+    #cursor {
+      width: 8px;
+      height: 8px;
+      transform: scale(1);
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    #aura {
+      width: 46px;
+      height: 46px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background-color: rgba(255, 255, 255, 0.27);
+      transform: translate(5px, 5px);
+    }
+
+    #aura.active {
+      border: 1.2px solid rgba(255, 255, 255, 0.33);
+      transform: scale(1.3);
+    }
+
+    #cursor.active {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    #cursor.hidden,
+    #aura.hidden {
+      transform: scale(0.001);
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+</head>
+
+<body>
+  <div id="cursor" class="hidden"></div>
+  <div id="aura" class="hidden"></div>
+  <section class="hero">
+    <div class="container">
+      <ul class="hero__nav">
+        <li class="hero__item"><a href="item1" class="hero__link">Mountain</a></li>
+        <li class="hero__item"><a href="item2" class="hero__link">Beach</a></li>
+        <li class="hero__item"><a href="item3" class="hero__link">National Park</a></li>
+        <li class="hero__item"><a href="item4" class="hero__link">Big Tree</a></li>
+      </ul>
+      <div class="hero__images">
+        <div id="item1" class="hero__img">
+          <img src="img/1.jpg" alt="Alt">
+          <div class="hero__img-text">Yosemite National Park,<br>United States</div>
+        </div>
+        <div id="item2" class="hero__img">
+          <img src="img/2.jpg" alt="Alt">
+          <div class="hero__img-text">Venice Beach,<br>Los Angeles</div>
+        </div>
+        <div id="item3" class="hero__img">
+          <img src="img/3.jpg" alt="Alt">
+          <div class="hero__img-text">Valley of Fire State Park,<br>United States</div>
+        </div>
+        <div id="item4" class="hero__img">
+          <img src="img/4.jpg" alt="Alt">
+          <div class="hero__img-text">Sequoia National Park,<br>United States</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    const links = document.querySelectorAll('.hero__link');
+    const images = document.querySelectorAll('.hero__img');
+
+    // hover to show fadein image
+    links.forEach((link) => {
+      link.addEventListener('mouseover', (e) => {
+        links.forEach((link) => {
+          link.classList.remove('hero__link--active');
+        });
+        link.classList.add('hero__link--active');
+
+        let activeId = link.getAttribute("href");
+
+        images.forEach((img) => {
+          img.classList.remove('hero__img--display', 'hero__img--active');
+        });
+        document.getElementById(`${activeId}`).classList.add('hero__img--display', 'hero__img--active');
+      });
+    });
+    
+    // custom cursor
+    const cursor = document.getElementById('cursor');
+    const follower = document.getElementById('aura');
+
+    let mouseX = 0,
+      mouseY = 0,
+      posX = 0,
+      posY = 0;
+
+    const mouseCoords = (e) => {
+      mouseX = e.pageX;
+      mouseY = e.pageY;
+    }
+
+    gsap.to({}, .01, {
+      repeat: -1,
+      onRepeat: () => {
+        posX += (mouseX - posX) / 5;
+        posY += (mouseY - posY) / 5;
+
+        gsap.set(cursor, {
+          css: {
+            left: mouseX,
+            top: mouseY,
+          }
+        });
+
+        gsap.set(follower, {
+          css: {
+            left: posX - 23,
+            top: posY - 23,
+          }
+        });
+      }
+    });
+
+    for (let i = 0; i < links.length; i++) {
+      links[i].addEventListener('mouseover', () => {
+        cursor.classList.add('active');
+        follower.classList.add('active');
+      })
+
+      links[i].addEventListener('mouseout', () => {
+        cursor.classList.remove('active');
+        follower.classList.remove('active');
+      })
+    }
+
+    document.body.addEventListener('mousemove', e => {
+      mouseCoords(e);
+      cursor.classList.remove('hidden');
+      follower.classList.remove('hidden');
+    })
+
+    document.body.addEventListener('mouseout', e => {
+      cursor.classList.add('hidden');
+      follower.classList.add('hidden');
+    })
+
+  </script>
+</body>
+
+</html>
